@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sam’s Sites</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Helvetica, Arial, sans-serif;
+      line-height: 1.65;
+      background: Canvas;
+      color: CanvasText;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 20px 16px;
+      backdrop-filter: saturate(120%) blur(6px);
+      background: color-mix(in oklab, Canvas 86%, transparent);
+      border-bottom: 1px solid color-mix(in oklab, CanvasText 12%, transparent);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: inherit;
+      padding: 6px 12px;
+      border: 1px solid color-mix(in oklab, CanvasText 18%, transparent);
+      border-radius: 999px;
+      font-size: 14px;
+      background: color-mix(in oklab, Canvas 92%, transparent);
+    }
+
+    main {
+      padding: 28px 16px 72px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    section {
+      margin: 44px 0;
+    }
+
+    section>h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+    }
+
+    .subheading {
+      margin: 0 0 16px;
+      font-size: 16px;
+      opacity: 0.82;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    /* section-specific grids */
+    #nuo .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #accessible-film .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #aigc .grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    #calligraphy .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #others .grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card {
+      border: 1px solid color-mix(in oklab, CanvasText 12%, transparent);
+      border-radius: 14px;
+      overflow: hidden;
+      background: color-mix(in oklab, Canvas 96%, transparent);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    }
+
+    figure {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .media {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .media.duo {
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .media-item {
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+    }
+
+    .media-item>img,
+    .media-item>video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .content {
+      padding: 8px;
+      font-size: 14px;
+    }
+
+    .stack {
+      display: grid;
+      gap: 8px;
+    }
+
+    .stack>img,
+    .stack>video {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    figcaption {
+      padding: 8px 12px 10px;
+      font-size: 14px;
+      border-top: 1px solid color-mix(in oklab, CanvasText 10%, transparent);
+    }
+
+    .note {
+      opacity: 0.85;
+    }
+
+    /* Masonry layout for staggered cards */
+    .grid.masonry {
+      /* display: block; */
+      column-width: 320px;
+      column-gap: 20px;
+    }
+
+    .grid.masonry .card {
+      display: inline-block;
+      width: 100%;
+      margin: 0 0 20px;
+      break-inside: avoid;
+    }
+
+    .special {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @media (max-width: 980px) {
+      .grid.masonry {
+        column-width: 280px;
+        column-gap: 16px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .grid.masonry {
+        column-width: 100%;
+        column-gap: 0;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .media.duo {
+        grid-template-columns: 1fr;
+      }
+
+
+      #nuo .grid,
+      #accessible-film .grid,
+      #aigc .grid,
+      #calligraphy .grid,
+      #others .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 980px) {
+
+      .special,
+      #aigc .grid,
+      #others .grid {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+    }
+
+
+
+    /* horizontal gallery for Native */
+    .hscroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 12px;
+      scroll-snap-type: x mandatory;
+    }
+
+    .hscroll::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .hscroll::-webkit-scrollbar-thumb {
+      background: color-mix(in oklab, CanvasText 20%, transparent);
+      border-radius: 4px;
+    }
+
+    .hitem {
+      flex: 0 0 auto;
+      width: 520px;
+      scroll-snap-align: start;
+    }
+
+    .hitem .media-item {
+      aspect-ratio: 16 / 9;
+    }
+
+    /* Lightbox */
+    #lightbox[hidden] {
+      display: none;
+    }
+
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+    }
+
+    #lightbox .lb-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(2px);
+    }
+
+    #lightbox .lb-content {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    #lightbox .lb-img,
+    #lightbox .lb-video {
+      max-width: 92vw;
+      max-height: 84vh;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+      background: #000;
+    }
+
+    #lightbox .lb-close {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      font-size: 24px;
+      border: none;
+      background: rgba(255, 255, 255, 0.9);
+      color: #111;
+      border-radius: 999px;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+    }
+
+    /* Click affordance */
+    main figure img {
+      cursor: zoom-in;
+    }
+
+    main figure video {
+      cursor: pointer;
+    }
+
+    @media (max-width: 980px) {
+      #native .hitem {
+        width: 360px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Sam’s Sites</h1>
+    <nav>
+      <a href="#nuo">Nuo Opera</a>
+      <a href="#accessible-film">Audio-described film project</a>
+      <a href="#aigc">AIGC Technology Project</a>
+      <a href="#native">Native American Field Research Project</a>
+      <a href="#calligraphy">Calligraphy</a>
+      <a href="#others">The Joy of Running</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="nuo">
+      <h2>Nuo Opera</h2>
+      <div class="grid masonry">
+        <figure class="card">
+          <div class="media duo">
+            <div class="media-item">
+              <video src="./傩戏傩舞/祁门傩舞.mp4" preload="metadata" controls playsinline></video>
+            </div>
+            <div class="media-item">
+              <img loading="lazy" src="./傩戏傩舞/和Hudlin校长现场感受傩舞.jpg"
+                alt="Experience Live Nuo Dance with Principal Hudlin in Qimen, Anhui Province" />
+            </div>
+          </div>
+          <figcaption>
+            <div class="stack">
+              <strong>Qimen Nuo Dance</strong>
+              <span class="note">Experience Live Nuo Dance with Principal Hudlin in Qimen,
+                Anhui Province</span>
+            </div>
+          </figcaption>
+        </figure>
+
+        <figure class="card">
+          <div class="media duo">
+            <div class="media-item">
+              <video src="./傩戏傩舞/湖南辰州傩戏.mp4" preload="metadata" controls playsinline></video>
+            </div>
+            <div class="media-item">
+              <img loading="lazy" src="./傩戏傩舞/学习辰州傩戏.jpg" alt="In Zhangjiajie, Hunan, Nuo Opera" />
+            </div>
+          </div>
+          <figcaption>In Zhangjiajie, Hunan, Nuo Opera</figcaption>
+        </figure>
+
+        <figure class="card">
+          <div class="media duo">
+            <div class="media-item">
+              <video src="./傩戏傩舞/贵州地戏-副本.mp4" preload="metadata" controls playsinline></video>
+            </div>
+            <div class="media-item">
+              <img loading="lazy" src="./傩戏傩舞/走进贵州傩戏.jpg" alt="Jun Nuo at Anshun Wu temple" />
+            </div>
+          </div>
+          <figcaption>Jun Nuo at Anshun Wu temple</figcaption>
+        </figure>
+
+        <figure class="card">
+          <div class="media duo">
+            <div class="media-item">
+              <video src="./傩戏傩舞/《大江南》纪录片英文.mp4" preload="metadata" controls playsinline></video>
+            </div>
+            <div class="media-item">
+              <img loading="lazy" src="./傩戏傩舞/《大江南》纪录片采访.jpg" alt="The Great Jiangnan documentary interview" />
+            </div>
+          </div>
+          <figcaption>
+            <div class="stack">
+              <strong>The Great River and Land - A Cultural Epic of Our Ancestors</strong>
+              <span class="note">the documentary "The Great Jiangnan," is set to be officially
+                showed on Dragon TV</span>
+            </div>
+          </figcaption>
+          <figcaption>
+
+          </figcaption>
+        </figure>
+
+        <figure class="card">
+          <div class="media">
+            <div class="media-item">
+              <img loading="lazy" src="./傩戏傩舞/傩戏研习社.jpg" alt="Nuo Opera Study Societ" />
+            </div>
+          </div>
+          <figcaption>Nuo Opera Study Societ</figcaption>
+        </figure>
+
+        <figure class="card">
+          <div class="content">
+            <div class="stack">
+              <img src="./傩戏傩舞/傩戏研习社社长宣讲.jpg"
+                alt="As the president of the Nuo Opera Study Societ, I am here to give a presentation." />
+              <img src="./傩戏傩舞/傩戏研习社社长宣讲1.jpg"
+                alt="As the president of the Nuo Opera Study Societ, I am here to give a presentation." />
+            </div>
+          </div>
+          <figcaption>
+            As the president of the Nuo Opera Study Societ， I am here to give
+            a presentation.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="accessible-film">
+      <h2>audio-described film project</h2>
+      <div class="grid masonry">
+        <figure class="card">
+          <div class="content">
+            <div class="stack">
+              <video src="./无障碍电影/《光影有爱》东方卫视播出.mp4" preload="metadata" controls playsinline></video>
+              <video src="./无障碍电影/无障碍电影产品.mp4" preload="metadata" controls playsinline></video>
+
+            </div>
+          </div>
+          <figcaption>
+            I was interviewed by Dragon TV's "Light and Shadow, Love in the Air" crew
+          </figcaption>
+        </figure>
+
+        <figure class="card">
+          <div class="content">
+            <div class="stack special">
+              <img src=" ./无障碍电影/无障碍电影公益解说员证书.jpg" alt="Accessible Film Project, Founder &amp; President" />
+              <img src="./无障碍电影/无障碍电影组织者被采访播出.jpg" alt="Accessible Film Project, Founder &amp; President" />
+              <img src="./无障碍电影/无障碍电影志愿者.jpg" alt="Accessible Film Project, Founder &amp; President" />
+              <img src="./无障碍电影/无障碍电影志愿者1.jpg" alt="Accessible Film Project, Founder &amp; President" />
+              <img src="./无障碍电影/无障碍电影志愿者2.jpg" alt="Accessible Film Project, Founder &amp; President" />
+              <img src="./无障碍电影/无障碍电影志愿者3.jpg" alt="Accessible Film Project, Founder &amp; President" />
+              <img src="./无障碍电影/无障碍电影志愿者4.jpg" alt="Accessible Film Project, Founder &amp; President" />
+              <img src="./无障碍电影/无障碍电影志愿者5.jpg" alt="Accessible Film Project, Founder &amp; President" />
+            </div>
+          </div>
+          <figcaption>
+            Accessible Film Project, Founder &amp; President
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="aigc">
+      <h2>AIGC Technology Project</h2>
+      <div class="grid masonry">
+        <figure class="card">
+          <div class="content">
+            <div class="stack">
+              <video src="./AIGC项目/上海博物馆节气AIGC/大暑节气.mp4" preload="metadata" controls playsinline></video>
+              <video src="./AIGC项目/上海博物馆节气AIGC/立秋.mp4" preload="metadata" controls playsinline></video>
+              <video src="./AIGC项目/上海博物馆节气AIGC/处暑.mp4" preload="metadata" controls playsinline></video>
+              <video src="./AIGC项目/上海博物馆节气AIGC/白露.mp4" preload="metadata" controls playsinline></video>
+            </div>
+          </div>
+          <figcaption>
+            Bringing Seasons in Ancient Paintings to Life with AIGC，by Senran
+            He
+          </figcaption>
+        </figure>
+
+        <figure class="card">
+          <div class="media">
+            <div class="media-item">
+              <img loading="lazy" src="./AIGC项目/花鸟虚拟秀获奖证书.jpg"
+                alt="Oriental Flower and Bird Virtual Show Wins Case Award from the Society" />
+            </div>
+          </div>
+          <figcaption>
+            "Oriental Flower and Bird Virtual Show" Wins Case Award from the
+            Society
+          </figcaption>
+        </figure>
+
+        <figure class="card">
+          <div class="content">
+            <div class="stack">
+              <img loading="lazy" src="./AIGC项目/摩梭族服饰调研/服装.jpg" alt="Mosuo clothing research" />
+              <img loading="lazy" src="./AIGC项目/摩梭族服饰调研/服装1.jpg" alt="Mosuo clothing research" />
+              <img loading="lazy" src="./AIGC项目/摩梭族服饰调研/服装2.jpg" alt="Mosuo clothing research" />
+            </div>
+          </div>
+          <figcaption>
+            Conducted research about Mosuo people’s clothing
+          </figcaption>
+        </figure>
+
+        <figure class="card">
+          <div class="content">
+            <div class="stack">
+              <img loading="lazy" src="./AIGC项目/摩梭族服饰调研/服装论文.jpg" alt="The research paper was published" />
+              <img loading="lazy" src="./AIGC项目/摩梭族服饰调研/服装论文1.jpg" alt="The research paper was published" />
+              <img loading="lazy" src="./AIGC项目/摩梭族服饰调研/服装论文2.jpg" alt="The research paper was published" />
+            </div>
+          </div>
+          <figcaption>The research paper was published</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="native">
+      <h2>Native American Field Research Project</h2>
+      <div class="grid masonry">
+        <figure class="card">
+          <div class="media">
+            <div class="media-item">
+              <img loading="lazy" src="./切诺基印第安调研/印第安.jpg" alt="Native American field research" />
+            </div>
+          </div>
+        </figure>
+        <figure class="card">
+          <div class="media">
+            <div class="media-item">
+              <img loading="lazy" src="./切诺基印第安调研/印第安1.jpg" alt="Native American field research" />
+            </div>
+          </div>
+        </figure>
+        <figure class="card">
+          <div class="media">
+            <div class="media-item">
+              <img loading="lazy" src="./切诺基印第安调研/印第安2.jpg" alt="Native American field research" />
+            </div>
+          </div>
+        </figure>
+        <figure class="card">
+          <div class="media">
+            <div class="media-item">
+              <img loading="lazy" src="./切诺基印第安调研/印第安3.jpg" alt="Native American field research" />
+            </div>
+          </div>
+        </figure>
+        <figure class="card">
+          <div class="media">
+            <div class="media-item">
+              <img loading="lazy" src="./切诺基印第安调研/印第安4.jpg" alt="Native American field research" />
+            </div>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <section id="calligraphy">
+      <h2>calligraphy</h2>
+      <div class="grid masonry">
+        <figure class="card">
+          <div class="content">
+            <div class="stack">
+              <img src="./书法/青少年书法家协会会员.jpg" alt="Shanghai Youth Calligraphy Association, Member" />
+              <img src="./书法/九级书法证书.jpg" alt="Shanghai Youth Calligraphy Association, Member" />
+            </div>
+          </div>
+          <figcaption>
+            Shanghai Youth Calligraphy Association, Member
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <div class="content">
+            <div class="stack">
+              <img src="./书法/书法.jpg"
+                alt="My calligraphy works have been exhibited on numerous occasions and have won awards" />
+              <img src="./书法/书法展出.jpg"
+                alt="My calligraphy works have been exhibited on numerous occasions and have won awards" />
+              <img src="./书法/中学书法.jpg"
+                alt="My calligraphy works have been exhibited on numerous occasions and have won awards" />
+              <img src="./书法/小学书法获奖.png"
+                alt="My calligraphy works have been exhibited on numerous occasions and have won awards" />
+            </div>
+          </div>
+          <figcaption>
+            My calligraphy works have been exhibited on numerous occasions and
+            have won awards
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="others">
+      <h2>The Joy of Running</h2>
+      <div class="grid masonry">
+        <figure class="card">
+          <div class="media">
+            <div class="media-item">
+              <img loading="lazy" src="./其他活动/与NBA球星.jpg" alt="Photo with an NBA Star" />
+            </div>
+          </div>
+          <figcaption>Photo with an NBA Star</figcaption>
+        </figure>
+        <figure class="card">
+          <div class="media">
+            <div class="media-item">
+              <img loading="lazy" src="./其他活动/小小发明家.jpg" alt="Young Inventor" />
+            </div>
+          </div>
+          <figcaption>Young Inventor</figcaption>
+        </figure>
+        <figure class="card">
+          <div class="media">
+            <div class="media-item">
+              <img loading="lazy" src="./其他活动/小小足球梦.jpg" alt="A Young Football Dream" />
+            </div>
+          </div>
+          <figcaption>A Young Football Dream</figcaption>
+        </figure>
+        <figure class="card">
+          <div class="media">
+            <div class="media-item">
+              <img loading="lazy" src="./其他活动/高中学校主持.jpg" alt="School Event Host" />
+            </div>
+          </div>
+          <figcaption>School Event Host</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" hidden>
+      <div class="lb-backdrop"></div>
+      <div class="lb-content" role="dialog" aria-modal="true">
+        <button class="lb-close" aria-label="Close">×</button>
+        <img class="lb-img" alt="Preview" />
+        <video class="lb-video" controls playsinline></video>
+      </div>
+    </div>
+  </main>
+</body>
+<script>
+  (function () {
+    const lightbox = document.getElementById("lightbox");
+    if (!lightbox) return;
+    const imgEl = lightbox.querySelector(".lb-img");
+    const videoEl = lightbox.querySelector(".lb-video");
+    const closeBtn = lightbox.querySelector(".lb-close");
+    const backdrop = lightbox.querySelector(".lb-backdrop");
+
+    // Capture-phase handler: prevent inline videos from playing and open lightbox instead
+    document.addEventListener(
+      "click",
+      (e) => {
+        const tappedVideo = e.target.closest("main figure video");
+        if (!tappedVideo || e.target.closest("#lightbox")) return;
+        e.preventDefault();
+        e.stopPropagation();
+        const src = tappedVideo.currentSrc || tappedVideo.getAttribute("src");
+        if (src) {
+          imgEl.removeAttribute("src");
+          imgEl.style.display = "none";
+          videoEl.style.display = "block";
+          videoEl.src = src;
+          lightbox.removeAttribute("hidden");
+          videoEl.play().catch(() => { });
+        }
+      },
+      true
+    );
+
+    function openImage(src, alt) {
+      videoEl.pause();
+      videoEl.removeAttribute("src");
+      videoEl.style.display = "none";
+      imgEl.style.display = "block";
+      imgEl.src = src;
+      imgEl.alt = alt || "Preview";
+      lightbox.removeAttribute("hidden");
+    }
+    function openVideo(src) {
+      imgEl.removeAttribute("src");
+      imgEl.style.display = "none";
+      videoEl.style.display = "block";
+      videoEl.src = src;
+      lightbox.removeAttribute("hidden");
+      videoEl.play().catch(() => { });
+    }
+    function close() {
+      lightbox.setAttribute("hidden", "");
+      if (videoEl) {
+        videoEl.pause();
+        videoEl.removeAttribute("src");
+      }
+      if (imgEl) {
+        imgEl.removeAttribute("src");
+      }
+    }
+
+    document.addEventListener("click", (e) => {
+      if (e.target.closest("#lightbox")) return; // ignore clicks inside lightbox
+      const media = e.target.closest("main figure img, main figure video");
+      if (!media) return;
+      const isVideo = media.tagName.toLowerCase() === "video";
+      if (isVideo) {
+        const src = media.currentSrc || media.getAttribute("src");
+        if (src) openVideo(src);
+      } else {
+        const src = media.getAttribute("src");
+        if (src) openImage(src, media.getAttribute("alt"));
+      }
+    });
+
+    closeBtn.addEventListener("click", close);
+    backdrop.addEventListener("click", close);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") close();
+    });
+  })();
+</script>
+
+</html>
